@@ -1,2 +1,9 @@
-// This file is intentionally empty.
-// See src/types/express-augmentation.d.ts for Express type extensions.
+import { jwtPayload } from "../../domains/auth/interface/jwt.payload.interface";
+
+declare global {
+  namespace Express {
+    interface Request {
+      user?: jwtPayload;
+    }
+  }
+}

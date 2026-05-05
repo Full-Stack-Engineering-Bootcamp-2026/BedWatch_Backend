@@ -4,8 +4,9 @@ import { AppDataSource } from "../../../db/db";
 import { Admission, AdmissionStatus } from "../entity/admission.entity";
 import { Bed } from "../../bed/entity/bed.entity";
 import { Patient } from "../../patient/entity/patient.entity";
-import { User } from "../../user/entity/user.entity";
+import { User ,UserRole } from "../../user/entity/user.entity";
 import { BedStatus } from "../../bed/entity/bed.entity";
+
 
 @Service()
 export class AdmissionService {
@@ -34,14 +35,20 @@ export class AdmissionService {
 
     const user = await this.userRepo.findOne({
       where: { id: userId },
-      relations: ["ward"], // needed for RBAC later
+      relations: ["ward"], 
     });
 
     if (!user) {
       throw new Error("User not found");
     }
 
-    if (bed.status !== "AVAILABLE") {
+    if(user.role ===UserRole.STAFF){
+      if(!user.ward || user.ward.id !== bed.ward.id){
+        throw new Error("Access Denied - Cannot admit in other ward ")
+      }
+    }
+
+    if (bed.status !== BedStatus.AVAILABLE) {
       throw new Error("Bed Not Available");
     }
 
@@ -70,6 +77,8 @@ export class AdmissionService {
 
       bed.status = BedStatus.OCCUPIED;
       await bedRepo.save(bed);
+
+      return admission;
     });
   }
 
@@ -81,7 +90,7 @@ export class AdmissionService {
 
       const admission = await admissionRepo.findOne({
         where: { id: admissionId },
-        relations: ["bed"],
+        relations: ["bed","bed.ward"],
       });
 
       if (!admission) {
@@ -94,10 +103,17 @@ export class AdmissionService {
 
       const user = await userRepo.findOne({
         where: { id: userId },
+        relations:["ward"],
       });
 
       if (!user) {
         throw new Error("No User");
+      }
+
+      if(user.role === UserRole.STAFF){
+        if(!user.ward || user.ward.id !== admission.bed.ward.id){
+        throw new Error("Access Denied - Cannot discharge in other ward ")
+      }
       }
 
       admission.status = AdmissionStatus.DISCHARGED;
