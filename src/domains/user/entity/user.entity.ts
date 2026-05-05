@@ -33,7 +33,7 @@ export class User {
   role!: UserRole;
 
   @ManyToOne(() => Ward, (ward) => ward.users, { nullable: true })
-  ward!: Ward;
+  ward!: Ward | null;
 
   @CreateDateColumn()
   created_at!: Date;

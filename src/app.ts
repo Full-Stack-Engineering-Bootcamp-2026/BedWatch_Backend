@@ -10,6 +10,7 @@ import { AuthRoutes } from "./domains/auth/routes/auth.routes";
 import { AuthenticationMiddleware } from "./domains/auth/middleware/authenticate.middleware";
 import { Router } from "express";
 import Container from "typedi";
+import { WardRoutes } from "./domains/ward/routes/ward.routes";
 
 dotenv.config();
 
@@ -48,7 +49,6 @@ class Application {
   }
 
   private initializeRoutes(): void {
-
     const v1Router = Router();
     v1Router.get("/", (_req: Request, res: Response) => {
       return res.json(success(null, "Server is running"));
@@ -56,15 +56,20 @@ class Application {
 
     const authMiddleware = Container.get(AuthenticationMiddleware);
 
-    v1Router.get("/posts",authMiddleware.use,(req:Request , res:Response)=>{
-      res.json(
-        success({
-          user: req.user,
-        }),
-      )
-    });
-
-    this.app.use("/api/v1",v1Router);
+    v1Router.get(
+      "/posts",
+      authMiddleware.use,
+      (req: Request, res: Response) => {
+        res.json(
+          success({
+            user: req.user,
+          }),
+        );
+      },
+    );
+    const wardRoutes = Container.get(WardRoutes);
+    v1Router.use("/wards", wardRoutes.router);
+    this.app.use("/api/v1", v1Router);
   }
 
   private async connectDatabase(): Promise<void> {

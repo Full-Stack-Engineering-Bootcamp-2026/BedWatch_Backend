@@ -20,15 +20,22 @@ export class Ward {
   name!: string;
 
   @Column()
+  type!: string;
+
+  @Column()
   capacity!: number;
 
   @OneToMany(() => Bed, (bed) => bed.ward)
   beds!: Bed[];
 
-
-  //check
-  @ManyToOne(() => User, (user) => user.ward)
+  // //check
+  // @ManyToOne(() => User, (user) => user.ward)
+  // users!: User[];
+  @OneToMany(() => User, (user) => user.ward)
   users!: User[];
+
+  @Column({ type: "text", nullable: true })
+  description!: string | null;
 
   @CreateDateColumn()
   created_at!: Date;
