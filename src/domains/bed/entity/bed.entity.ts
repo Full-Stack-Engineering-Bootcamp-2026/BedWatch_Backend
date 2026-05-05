@@ -13,7 +13,7 @@ import { Ward } from "../../ward/entity/ward.entity";
 
 import { Admission } from "../../admission/entity/admission.entity";
 
-import { BedStatusLog } from "../../logs/entity/bedStatusLogs.entity";
+import { BedStatusLog } from "../../logs/entity/bedStatusLog.entity";
 
 export enum BedStatus {
   AVAILABLE = "AVAILABLE",
