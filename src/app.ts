@@ -11,6 +11,7 @@ import { AuthenticationMiddleware } from "./domains/auth/middleware/authenticate
 import { Router } from "express";
 import Container from "typedi";
 import { WardRoutes } from "./domains/ward/routes/ward.routes";
+import { UserRoutes } from "./domains/user/routes/user.routes";
 
 dotenv.config();
 
@@ -69,8 +70,10 @@ class Application {
     );
     const wardRoutes = Container.get(WardRoutes);
     const authRoutes = Container.get(AuthRoutes);
+    const userRoutes = Container.get(UserRoutes);
     v1Router.use("/wards", wardRoutes.router);
     v1Router.use("/auth", authRoutes.router);
+    v1Router.use("/users", userRoutes.router);
 
     this.app.use("/api/v1", v1Router);
   }
