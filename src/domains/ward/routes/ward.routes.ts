@@ -14,5 +14,6 @@ export class WardRoutes {
   private initializeRoutes(): void {
     this.router.get("/", this.wardController.getAllWards);
     this.router.post("/create", this.wardController.createWard);
+    this.router.get("/summary", this.wardController.getWardSummary);
   }
 }
