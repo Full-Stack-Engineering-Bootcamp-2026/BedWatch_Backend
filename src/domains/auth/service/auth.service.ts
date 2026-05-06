@@ -24,7 +24,6 @@ export class AuthService {
       id: user.id,
       email: user.email,
       role: user.role,
-      wardId: user.ward?.id,
     };
 
     return jwt.sign(payload, process.env.JWT_SECRET as string, {
@@ -48,7 +47,6 @@ export class AuthService {
       id: number;
       email: string;
       role: string;
-      wardId?: number;
     };
   }
 
