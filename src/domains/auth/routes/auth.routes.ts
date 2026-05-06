@@ -2,7 +2,6 @@ import { Router } from "express";
 import { Service } from "typedi";
 import { AuthController } from "../controller/auth.controller";
 
-
 @Service()
 export class AuthRoutes {
   public router: Router;
@@ -14,5 +13,6 @@ export class AuthRoutes {
 
   private initializeRoutes(): void {
     this.router.post("/login", this.authController.login);
+    this.router.post("/create-admin", this.authController.createAdmin);
   }
 }
