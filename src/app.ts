@@ -68,7 +68,10 @@ class Application {
       },
     );
     const wardRoutes = Container.get(WardRoutes);
+    const authRoutes = Container.get(AuthRoutes);
     v1Router.use("/wards", wardRoutes.router);
+    v1Router.use("/auth", authRoutes.router);
+
     this.app.use("/api/v1", v1Router);
   }
 
