@@ -24,5 +24,17 @@ export class TransferRoutes {
       authMiddleware.use,
       controller.getPendingTransfers,
     );
+
+    this.router.patch(
+      "/:id/approve",
+      authMiddleware.use,
+      controller.approveTransfer,
+    );
+
+    this.router.patch(
+      "/:id/reject",
+      authMiddleware.use,
+      controller.rejectTransfer,
+    );
   }
 }
