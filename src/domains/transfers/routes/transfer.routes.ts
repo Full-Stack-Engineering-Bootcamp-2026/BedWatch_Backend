@@ -15,15 +15,14 @@ export class TransferRoutes {
   private initializeRoutes() {
     const controller = Container.get(TransferController);
 
-    const authMiddleware = Container.get(
-      AuthenticationMiddleware
-    );
+    const authMiddleware = Container.get(AuthenticationMiddleware);
 
-    this.router.post(
-      "/",
+    this.router.post("/", authMiddleware.use, controller.createTransferRequest);
+
+    this.router.get(
+      "/pending",
       authMiddleware.use,
-      controller.createTransferRequest
+      controller.getPendingTransfers,
     );
-
   }
 }

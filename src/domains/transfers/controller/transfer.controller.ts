@@ -28,4 +28,24 @@ export class TransferController {
         .json(failure(error.message || "failed to create transfer request"));
     }
   };
+
+  public getPendingTransfers = async(req:Request,res:Response)=>{
+    try{
+        const userId = Number(req.user?.id);
+
+        const transfers = 
+        await this.transferService.getPendingTransfers(userId);
+
+        return res.status(200).json(
+            success(transfers,"Pending transfers fetched successfully")
+        )
+    }catch(error:any){
+        return res.status(400)
+        .json(
+            failure(
+                error.message||"failed to fetch pending request"
+            )
+        )
+    }
+  }
 }

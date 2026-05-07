@@ -8,6 +8,7 @@ import {
 import { Bed, BedStatus } from "../../bed/entity/bed.entity";
 import { Patient } from "../../patient/entity/patient.entity";
 import { User, UserRole } from "../../user/entity/user.entity";
+import { error } from "node:console";
 
 @Service()
 export class TransferService {
@@ -98,5 +99,38 @@ export class TransferService {
     await this.transferRepo.save(transfer);
 
     return transfer;
+  }
+
+  public async getPendingTransfers(userId: number) {
+    const user = await this.userRepo.findOne({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    if (user.role !== UserRole.SENIOR_STAFF) {
+      throw new Error("Only Senior Staff can view pending transfers");
+    }
+
+    const transfers = await this.transferRepo.find({
+      where: {
+        status: TransferStatus.PENDING,
+      },
+
+      relations: [
+        "patient",
+        "from_bed",
+        "from_bed.ward",
+        "to_bed",
+        "to_bed.ward",
+        "requested_by",
+      ],
+      order:{
+        requested_at:"DESC",
+      },
+    });
+    return transfers;
   }
 }
