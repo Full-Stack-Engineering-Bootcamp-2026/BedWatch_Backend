@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import "reflect-metadata";
 
-import  AppDataSource  from "./db/data-source";
+import AppDataSource  from "./db/data-source";
 import { success, failure } from "./Http_Response/response";
 
 import { AuthRoutes } from "./domains/auth/routes/auth.routes";
