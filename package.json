@@ -9,7 +9,8 @@
     "start": "node dist/app.js",
     "migration:create": "typeorm-ts-node-commonjs migration:create",
     "migration:run": "typeorm-ts-node-commonjs migration:run -d src/db/data-source.ts",
-    "migration:revert": "typeorm-ts-node-commonjs migration:revert -d src/db/data-source.ts"
+    "migration:revert": "typeorm-ts-node-commonjs migration:revert -d src/db/data-source.ts",
+    "migration:generate": "typeorm-ts-node-commonjs migration:generate src/migrations/AutoMigration -d src/db/data-source.ts"
   },
   "keywords": [],
   "author": "",

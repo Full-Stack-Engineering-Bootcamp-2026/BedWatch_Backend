@@ -1,5 +1,5 @@
 import { Service } from "typedi";
-import { AppDataSource } from "../../../db/db";
+import AppDataSource from "../../../db/data-source";
 import { User, UserRole } from "../../user/entity/user.entity";
 import bcrypt from "bcrypt";
 import jwt, { SignOptions } from "jsonwebtoken";
