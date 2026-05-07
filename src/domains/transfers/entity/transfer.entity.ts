@@ -14,6 +14,7 @@ export enum TransferStatus {
   PENDING = "PENDING",
   APPROVED = "APPROVED",
   REJECTED = "REJECTED",
+  COMPLETED = "COMPLETED"
 }
 
 @Entity("transfers")
