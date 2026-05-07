@@ -48,7 +48,6 @@ class Application {
   }
 
   private initializeRoutes(): void {
-
     const v1Router = Router();
     v1Router.get("/", (_req: Request, res: Response) => {
       return res.json(success(null, "Server is running"));
@@ -56,15 +55,19 @@ class Application {
 
     const authMiddleware = Container.get(AuthenticationMiddleware);
 
-    v1Router.get("/posts",authMiddleware.use,(req:Request , res:Response)=>{
-      res.json(
-        success({
-          user: req.user,
-        }),
-      )
-    });
+    v1Router.get(
+      "/posts",
+      authMiddleware.use,
+      (req: Request, res: Response) => {
+        res.json(
+          success({
+            user: req.user,
+          }),
+        );
+      },
+    );
 
-    this.app.use("/api/v1",v1Router);
+    this.app.use("/api/v1", v1Router);
   }
 
   private async connectDatabase(): Promise<void> {

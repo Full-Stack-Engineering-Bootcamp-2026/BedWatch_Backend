@@ -2,7 +2,6 @@ import { Router } from "express";
 import { Service } from "typedi";
 import { AuthController } from "../controller/auth.controller";
 
-
 @Service()
 export class AuthRoutes {
   public router: Router;

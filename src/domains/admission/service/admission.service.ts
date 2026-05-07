@@ -4,9 +4,8 @@ import { AppDataSource } from "../../../db/db";
 import { Admission, AdmissionStatus } from "../entity/admission.entity";
 import { Bed } from "../../bed/entity/bed.entity";
 import { Patient } from "../../patient/entity/patient.entity";
-import { User ,UserRole } from "../../user/entity/user.entity";
+import { User, UserRole } from "../../user/entity/user.entity";
 import { BedStatus } from "../../bed/entity/bed.entity";
-
 
 @Service()
 export class AdmissionService {
@@ -35,16 +34,16 @@ export class AdmissionService {
 
     const user = await this.userRepo.findOne({
       where: { id: userId },
-      relations: ["ward"], 
+      relations: ["ward"],
     });
 
     if (!user) {
       throw new Error("User not found");
     }
 
-    if(user.role ===UserRole.STAFF){
-      if(!user.ward || user.ward.id !== bed.ward.id){
-        throw new Error("Access Denied - Cannot admit in other ward ")
+    if (user.role === UserRole.STAFF) {
+      if (!user.ward || user.ward.id !== bed.ward.id) {
+        throw new Error("Access Denied - Cannot admit in other ward ");
       }
     }
 
@@ -90,7 +89,7 @@ export class AdmissionService {
 
       const admission = await admissionRepo.findOne({
         where: { id: admissionId },
-        relations: ["bed","bed.ward"],
+        relations: ["bed", "bed.ward"],
       });
 
       if (!admission) {
@@ -103,17 +102,17 @@ export class AdmissionService {
 
       const user = await userRepo.findOne({
         where: { id: userId },
-        relations:["ward"],
+        relations: ["ward"],
       });
 
       if (!user) {
         throw new Error("No User");
       }
 
-      if(user.role === UserRole.STAFF){
-        if(!user.ward || user.ward.id !== admission.bed.ward.id){
-        throw new Error("Access Denied - Cannot discharge in other ward ")
-      }
+      if (user.role === UserRole.STAFF) {
+        if (!user.ward || user.ward.id !== admission.bed.ward.id) {
+          throw new Error("Access Denied - Cannot discharge in other ward ");
+        }
       }
 
       admission.status = AdmissionStatus.DISCHARGED;
