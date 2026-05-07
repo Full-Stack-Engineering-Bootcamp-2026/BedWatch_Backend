@@ -1,5 +1,5 @@
 import { AppDataSource } from "../../../db/db";
-
+import bcrypt from "bcrypt";
 import { User, UserRole } from "../entity/user.entity";
 
 import { Ward } from "../../ward/entity/ward.entity";
@@ -8,7 +8,9 @@ import { Service } from "typedi";
 @Service()
 export class UserService {
   private userRepository = AppDataSource.getRepository(User);
-
+  public async hashPassword(password: string): Promise<string> {
+    return bcrypt.hash(password, 10);
+  }
   private wardRepository = AppDataSource.getRepository(Ward);
 
   public createUser = async (data: {
@@ -41,11 +43,12 @@ export class UserService {
         throw new Error("Ward not found");
       }
     }
+    const hashedPassword = await this.hashPassword(data.password);
 
     const user = this.userRepository.create({
       name: data.name,
       email: data.email,
-      password: data.password,
+      password: hashedPassword,
       role: data.role,
       ward,
     });
