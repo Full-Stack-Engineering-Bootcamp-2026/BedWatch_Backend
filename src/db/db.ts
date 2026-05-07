@@ -1,7 +1,6 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
 import dotenv from "dotenv";
-
 dotenv.config();
 
 export const AppDataSource = new DataSource({
@@ -13,7 +12,8 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_NAME,
 
   synchronize: false,
+  // entities: [Ward, Bed, User, BedStatusLog],
   logging: false,
 
-  entities: [__dirname + "/../domains/**/entities/*.{ts,js}"],
+  entities: [__dirname + "/../domains/**/entity/*.{ts,js}"],
 });

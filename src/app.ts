@@ -6,6 +6,13 @@ import "reflect-metadata";
 import { AppDataSource } from "./db/db";
 import { success, failure } from "./Http_Response/response";
 
+import { AuthRoutes } from "./domains/auth/routes/auth.routes";
+import { AuthenticationMiddleware } from "./domains/auth/middleware/authenticate.middleware";
+import { Router } from "express";
+import Container from "typedi";
+import { WardRoutes } from "./domains/ward/routes/ward.routes";
+import { UserRoutes } from "./domains/user/routes/user.routes";
+
 dotenv.config();
 
 class Application {
@@ -43,9 +50,32 @@ class Application {
   }
 
   private initializeRoutes(): void {
-    this.app.get("/", (_req: Request, res: Response) => {
+    const v1Router = Router();
+    v1Router.get("/", (_req: Request, res: Response) => {
       return res.json(success(null, "Server is running"));
     });
+
+    const authMiddleware = Container.get(AuthenticationMiddleware);
+
+    v1Router.get(
+      "/posts",
+      authMiddleware.use,
+      (req: Request, res: Response) => {
+        res.json(
+          success({
+            user: req.user,
+          }),
+        );
+      },
+    );
+    const wardRoutes = Container.get(WardRoutes);
+    const authRoutes = Container.get(AuthRoutes);
+    const userRoutes = Container.get(UserRoutes);
+    v1Router.use("/wards", wardRoutes.router);
+    v1Router.use("/auth", authRoutes.router);
+    v1Router.use("/users", userRoutes.router);
+
+    this.app.use("/api/v1", v1Router);
   }
 
   private async connectDatabase(): Promise<void> {
