@@ -36,5 +36,19 @@ export class TransferRoutes {
       authMiddleware.use,
       controller.rejectTransfer,
     );
+
+    this.router.get("/all", authMiddleware.use, controller.getAllTransfers);
+
+    this.router.get(
+      "/completed",
+      authMiddleware.use,
+      controller.getCompletedTransfers,
+    );
+
+    this.router.get(
+      "/rejected",
+      authMiddleware.use,
+      controller.getRejectedTransfers,
+    );
   }
 }
