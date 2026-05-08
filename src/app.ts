@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import "reflect-metadata";
 
-import AppDataSource  from "./db/data-source";
+import  AppDataSource  from "./db/data-source";
 import { success, failure } from "./Http_Response/response";
 
 import { AuthRoutes } from "./domains/auth/routes/auth.routes";
@@ -11,8 +11,6 @@ import { AuthenticationMiddleware } from "./domains/auth/middleware/authenticate
 import { Router } from "express";
 import Container from "typedi";
 import { WardRoutes } from "./domains/ward/routes/ward.routes";
-import { UserRoutes } from "./domains/user/routes/user.routes";
-import { TransferRoutes } from "./domains/transfers/routes/transfer.routes";
 
 dotenv.config();
 
@@ -71,13 +69,8 @@ class Application {
     );
     const wardRoutes = Container.get(WardRoutes);
     const authRoutes = Container.get(AuthRoutes);
-    const userRoutes = Container.get(UserRoutes);
-    const transferRoute = Container.get(TransferRoutes)
-
     v1Router.use("/wards", wardRoutes.router);
     v1Router.use("/auth", authRoutes.router);
-    v1Router.use("/users", userRoutes.router);
-    v1Router.use("/transfers",transferRoute.router)
 
     this.app.use("/api/v1", v1Router);
   }
