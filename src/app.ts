@@ -15,6 +15,7 @@ import { UserRoutes } from "./domains/user/routes/user.routes";
 import { TransferRoutes } from "./domains/transfers/routes/transfer.routes";
 import { UserAdminRoutes } from "./domains/user/routes/user.admin.routes";
 import { WardAdminRoutes } from "./domains/ward/routes/ward.admin.routes";
+import { ForgotPasswordRoutes } from "./domains/forgot-password/routes/forgotPassword.routes";
 
 dotenv.config();
 
@@ -77,6 +78,7 @@ class Application {
     const transferRoute = Container.get(TransferRoutes);
     const userAdminRoutes = Container.get(UserAdminRoutes);
     const wardAdminRoutes = Container.get(WardAdminRoutes);
+    const forgotPasswordRoutes = Container.get(ForgotPasswordRoutes);
 
     v1Router.use("/wards", wardRoutes.router);
     v1Router.use("/auth", authRoutes.router);
@@ -84,6 +86,7 @@ class Application {
     v1Router.use("/transfers", transferRoute.router);
     v1Router.use("/usersAdmin", userAdminRoutes.router);
     v1Router.use("/wardsAdmin", wardAdminRoutes.router);
+    v1Router.use("/authF", forgotPasswordRoutes.router);
     this.app.use("/api/v1", v1Router);
   }
 
