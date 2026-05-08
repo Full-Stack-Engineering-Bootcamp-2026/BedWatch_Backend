@@ -2,15 +2,12 @@ import { Request, Response } from "express";
 
 import { getStaffDashboardService } from "../service/user.staff.service";
 
-import {
-  success,
-  failure,
-} from "../../../Http_Response/response";
+import {success,failure} from "../../../Http_Response/response";
 
 export  const getStaffDashboardController = async (
   req: Request,
   res: Response
-) => {
+) => {  
   try {
     const userId = Number(req.params.id);
 
