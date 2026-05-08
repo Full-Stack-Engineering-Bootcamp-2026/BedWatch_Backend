@@ -244,4 +244,65 @@ export class TransferService {
     await this.transferRepo.save(transfer);
     return transfer;
   }
+
+  public async getAllTransfers() {
+  return await this.transferRepo.find({
+    relations: [
+      "patient",
+      "fromWard",
+      "toWard",
+      "fromBed",
+      "toBed",
+      "requestedBy",
+    ],
+    order: {
+      requested_at: "DESC",
+    },
+  });
+
+  
+}
+
+public async getCompletedTransfers() {
+  return await this.transferRepo.find({
+    where: {
+      status: TransferStatus.COMPLETED,
+    },
+
+    relations: [
+      "patient",
+      "fromWard",
+      "toWard",
+      "fromBed",
+      "toBed",
+      "requestedBy",
+    ],
+
+    order: {
+      requested_at: "DESC",
+    },
+  });
+}
+
+public async getRejectedTransfers() {
+  return await this.transferRepo.find({
+    where: {
+      status: TransferStatus.REJECTED,
+    },
+
+    relations: [
+      "patient",
+      "fromWard",
+      "toWard",
+      "fromBed",
+      "toBed",
+      "requestedBy",
+    ],
+
+    order: {
+      requested_at: "DESC",
+
+    },
+  });
+}
 }
