@@ -20,7 +20,7 @@ function getEnvBackedConnectionOptions() {
 
     password: process.env.DB_PASSWORD || "",
 
-    database: process.env.DB_DATABASE || "bedwatch",
+    database: process.env.DB_DATABASE || "bedWatch",
 
     logging: process.env.DB_LOGGING === "true",
 
