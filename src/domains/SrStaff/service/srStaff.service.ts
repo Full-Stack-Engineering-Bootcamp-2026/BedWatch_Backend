@@ -2,6 +2,7 @@ import { Service } from "typedi";
 import AppDataSource from "../../../db/data-source";
 import { Bed, BedStatus } from "../../bed/entity/bed.entity";
 import { Ward } from "../../ward/entity/ward.entity";
+import { User, UserRole } from "../../user/entity/user.entity";
 import {
   Transfer,
   TransferStatus,
@@ -18,6 +19,8 @@ export class SeniorStaffService {
   private wardRepo = AppDataSource.getRepository(Ward);
   private transferRepo = AppDataSource.getRepository(Transfer);
   private admissionRepo = AppDataSource.getRepository(Admission);
+  private userRepo = AppDataSource.getRepository(User);
+
   public async getDashboardSummary() {
     const totalBeds = await this.bedRepo.count();
     const occupied = await this.bedRepo.count({
@@ -168,4 +171,40 @@ export class SeniorStaffService {
       discharges: dischargesData,
     };
   }
+
+  public async getProfile(userId: number) {
+    const user = await this.userRepo.findOne({
+      where: {
+        id: userId,
+      },
+      relations: ["ward"],
+    });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    if (user.role !== UserRole.SENIOR_STAFF) {
+      throw new Error("Only senior staff can access this profile");
+    }
+
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      ward: user.ward
+        ? {
+            id: user.ward.id,
+            name: user.ward.name,
+            type: user.ward.type,
+            capacity: user.ward.capacity,
+          }
+        : null,
+      created_at: user.created_at,
+      updated_at: user.updated_at,
+    };
+  }
+
+  
 }

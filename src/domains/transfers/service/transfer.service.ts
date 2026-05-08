@@ -249,11 +249,12 @@ export class TransferService {
   return await this.transferRepo.find({
     relations: [
       "patient",
-      "fromWard",
-      "toWard",
-      "fromBed",
-      "toBed",
-      "requestedBy",
+      "from_bed",
+      "from_bed.ward",
+      "to_bed",
+      "to_bed.ward",
+      "requested_by",
+      "approved_by",
     ],
     order: {
       requested_at: "DESC",
@@ -270,12 +271,12 @@ public async getCompletedTransfers() {
     },
 
     relations: [
-      "patient",
-      "fromWard",
-      "toWard",
-      "fromBed",
-      "toBed",
-      "requestedBy",
+      "from_bed",
+      "from_bed.ward",
+      "to_bed",
+      "to_bed.ward",
+      "requested_by",
+      "approved_by",
     ],
 
     order: {
@@ -292,11 +293,12 @@ public async getRejectedTransfers() {
 
     relations: [
       "patient",
-      "fromWard",
-      "toWard",
-      "fromBed",
-      "toBed",
-      "requestedBy",
+      "from_bed",
+      "from_bed.ward",
+      "to_bed",
+      "to_bed.ward",
+      "requested_by",
+      "approved_by",
     ],
 
     order: {
@@ -305,4 +307,6 @@ public async getRejectedTransfers() {
     },
   });
 }
+
+
 }

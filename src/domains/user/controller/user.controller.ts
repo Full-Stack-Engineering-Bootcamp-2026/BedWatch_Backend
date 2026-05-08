@@ -29,4 +29,20 @@ export class UserController {
         .json(failure(error.message || "Failed to create user"));
     }
   };
+
+  public getMe = async (req: Request, res: Response) => {
+    try {
+      const userId = Number(req.user?.id);
+
+      const user = await this.userService.getLoggedInUser(userId);
+
+      return res
+        .status(200)
+        .json(success(user, "Logged in user fetched successfully"));
+    } catch (error: any) {
+      return res
+        .status(400)
+        .json(failure(error.message || "Failed to fetch logged in user"));
+    }
+  };
 }
