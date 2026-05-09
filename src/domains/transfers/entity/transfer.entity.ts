@@ -28,8 +28,10 @@ export class Transfer {
   @ManyToOne(() => Bed)
   from_bed!: Bed;
 
-  @ManyToOne(() => Bed)
-  to_bed!: Bed;
+  @ManyToOne(() => Bed, {
+  nullable: true,
+})
+to_bed!: Bed | null;
 
   @ManyToOne(() => User)
   requested_by!: User;

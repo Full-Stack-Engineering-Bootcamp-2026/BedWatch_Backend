@@ -188,83 +188,120 @@ export const getAdmissionMetaService =
     };
   
 
-    export const dischargePatientService =
+ export const dischargePatientService =
   async (bedId: number) => {
 
-    const bed =
-      await bedRepository.findOne({
-        where: {
-          id: bedId,
-        },
+    return await AppDataSource.transaction(
+      async (manager) => {
 
-        relations: {
-          admissions: true,
-        },
-      });
+        const bed =
+          await manager.findOne(
+            Bed,
+            {
+              where: {
+                id: bedId,
+              },
 
-    if (!bed) {
-      throw new Error(
-        "Bed not found"
-      );
-    }
+              relations: {
+                admissions: true,
+              },
+            },
+          );
 
+        if (!bed) {
+          throw new Error(
+            "Bed not found",
+          );
+        }
 
-    bed.status =
-      BedStatus.CLEANING;
+        if (
+          bed.status ===
+          BedStatus.AVAILABLE
+        ) {
+          throw new Error(
+            "Bed already available",
+          );
+        }
 
-    await bedRepository.save(
-      bed
-    );
+        if (
+          bed.status ===
+          BedStatus.CLEANING
+        ) {
+          throw new Error(
+            "Bed already under cleaning",
+          );
+        }
 
+        const activeAdmission =
+          bed.admissions?.find(
+            (admission: any) =>
+              admission.status ===
+              AdmissionStatus.ACTIVE,
+          );
 
-    const activeAdmission =
-      bed.admissions?.find(
-       (admission: any) =>
-  admission.status ===
-  AdmissionStatus.ACTIVE
-      );
+        if (!activeAdmission) {
+          throw new Error(
+            "No active admission found",
+          );
+        }
 
-  
-    if (activeAdmission) {
+        // bed cleaning state
+        bed.status =
+          BedStatus.CLEANING;
 
-      activeAdmission.status =
-  AdmissionStatus.DISCHARGED;
+        await manager.save(bed);
 
-      activeAdmission.discharged_at =
-        new Date();
+        // discharge patient
+        activeAdmission.status =
+          AdmissionStatus.DISCHARGED;
 
-      await admissionRepository.save(
-        activeAdmission
-      );
-    }
+        activeAdmission.discharged_at =
+          new Date();
 
-   
-    setTimeout(async () => {
-
-      const updatedBed =
-        await bedRepository.findOne({
-          where: {
-            id: bedId,
-          },
-        });
-
-      if (updatedBed) {
-
-        updatedBed.status =
-          BedStatus.AVAILABLE;
-
-        await bedRepository.save(
-          updatedBed
+        await manager.save(
+          activeAdmission,
         );
-      }
 
-    }, 30000);
+        // auto available after 30 sec
+        setTimeout(async () => {
 
-   return {
-  message:
-    "Patient discharged successfully",
+          try {
 
-  cleaningEndsAt:
-    Date.now() + 30000,
-};
+            const updatedBed =
+              await bedRepository.findOne({
+                where: {
+                  id: bedId,
+                },
+              });
+
+            if (updatedBed) {
+
+              updatedBed.status =
+                BedStatus.AVAILABLE;
+
+              await bedRepository.save(
+                updatedBed,
+              );
+            }
+
+          } catch (error) {
+
+            console.log(
+              "Cleaning update failed",
+              error,
+            );
+          }
+
+        }, 30000);
+
+        return {
+
+          message:
+            "Patient discharged successfully",
+
+          cleaningEndsAt:
+            Date.now() + 30000,
+        };
+      },
+    );
   };
