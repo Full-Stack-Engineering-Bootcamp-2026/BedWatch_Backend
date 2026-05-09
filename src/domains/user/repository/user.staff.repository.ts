@@ -62,29 +62,33 @@ export const getStaffDashboardRepository =
           status:
             bed.status,
 
-            patient:
-              latestAdmission
-                ? {
-                    name:
-                      latestAdmission
-                        .patient.name,
+           patient:
+  latestAdmission
+    ? {
+        id:
+          latestAdmission
+            .patient.id,
 
-                    age:
-                      latestAdmission
-                        .patient.age,
+        name:
+          latestAdmission
+            .patient.name,
 
-                    diagnosis:
-                      latestAdmission
-                        .patient.reason,
+        age:
+          latestAdmission
+            .patient.age,
 
-                      admittedAt:
-                       latestAdmission?.admitted_at
-                                ? new Date(
-                                  latestAdmission.admitted_at
-                                   ).toLocaleString()
-                                               : "N/A",  
-                  }
-                : null,
+        diagnosis:
+          latestAdmission
+            .patient.reason,
+
+        admittedAt:
+          latestAdmission?.admitted_at
+            ? new Date(
+                latestAdmission.admitted_at
+              ).toLocaleString()
+            : "N/A",
+      }
+    : null,
 
             doctor:
               latestAdmission

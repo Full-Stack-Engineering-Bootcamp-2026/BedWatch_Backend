@@ -74,9 +74,14 @@ export class AuthService {
   }
 
   public async login(email: string, password: string) {
+    console.log("awbh");
+    
     const user = await this.userRepo.findOne({
       where: { email },
     });
+
+    console.log("user - ",user);
+    
 
     if (!user) {
       console.log("User not found");
