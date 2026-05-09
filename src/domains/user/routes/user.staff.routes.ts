@@ -1,10 +1,22 @@
 import { Router } from "express";
+
 import Container from "typedi";
 
-import { AuthorizationMiddleware } from "../../auth/middleware/authorization.middleware";
+import {
+  AuthorizationMiddleware,
+} from "../../auth/middleware/authorization.middleware";
 
-import { getStaffDashboardController } from "../controller/user.staff.controller";
-import { AuthenticationMiddleware } from "../../auth/middleware/authenticate.middleware";
+import {
+  AuthenticationMiddleware,
+} from "../../auth/middleware/authenticate.middleware";
+
+import {
+  getStaffDashboardController,
+  getAdmissionMetaController,
+  createAdmissionController,
+} from "../controller/user.staff.controller";
+
+import { dischargePatientController } from "../controller/user.staff.controller";
 
 const router = Router();
 
@@ -19,15 +31,53 @@ const authorizationMiddleware =
   );
 
 router.get(
-  "/dashboard/:id",
+  "/dashboard",
 
-//   authenticationMiddleware.use,
+  authenticationMiddleware.use,
 
-//   authorizationMiddleware.allowRoles(
-//     "STAFF"
-//   ),
+  authorizationMiddleware.allowRoles(
+    "STAFF"
+  ),
 
   getStaffDashboardController
 );
+
+router.get(
+  "/admission-meta",
+
+  authenticationMiddleware.use,
+
+  authorizationMiddleware.allowRoles(
+    "STAFF"
+  ),
+
+  getAdmissionMetaController
+);
+
+router.post(
+  "/admissions",
+
+  authenticationMiddleware.use,
+
+  authorizationMiddleware.allowRoles(
+    "STAFF"
+  ),
+
+  createAdmissionController
+);
+
+router.patch(
+  "/beds/:id/discharge",
+
+  authenticationMiddleware.use,
+
+  authorizationMiddleware.allowRoles(
+    "STAFF"
+  ),
+
+  dischargePatientController
+);
+
+
 
 export default router;
