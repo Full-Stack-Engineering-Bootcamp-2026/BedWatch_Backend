@@ -169,10 +169,20 @@ export class TransferService {
         throw new Error("Transfer already processed");
       }
 
-      if (transfer.to_bed.status !== BedStatus.AVAILABLE) {
-        throw new Error("Destination bed is no longer available");
-      }
+    if (!transfer.to_bed) {
+  throw new Error(
+    "Destination bed not assigned",
+  );
+}
 
+if (
+  transfer.to_bed.status !==
+  BedStatus.AVAILABLE
+) {
+  throw new Error(
+    "Destination bed is not available",
+  );
+}
       const admission = await admissionRepo.findOne({
         where: {
           patient: { id: transfer.patient.id },
