@@ -7,17 +7,19 @@ import { MigrationInterface, QueryRunner } from "typeorm";
  *
  * Creates the patients table.
  *
- * Dependencies: None
- *
  * =============================================================================
  */
 
 export class CreatePatientTable1746500000003
   implements MigrationInterface
 {
-  public async up(queryRunner: QueryRunner): Promise<void> {
+  public async up(
+    queryRunner: QueryRunner
+  ): Promise<void> {
+
     await queryRunner.query(`
       CREATE TABLE patients (
+
         id INT PRIMARY KEY AUTO_INCREMENT,
 
         name VARCHAR(255) NOT NULL,
@@ -30,11 +32,14 @@ export class CreatePatientTable1746500000003
           'OTHER'
         ) NOT NULL,
 
-        Reason VARCHAR(255) NOT NULL,
+        reason VARCHAR(255) NOT NULL,
 
-        Notes VARCHAR(255) NOT NULL,
+        notes VARCHAR(255) NOT NULL,
 
-        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+        admittingDoctor VARCHAR(255) NOT NULL,
+
+        created_at TIMESTAMP NOT NULL
+        DEFAULT CURRENT_TIMESTAMP
       );
     `);
 
@@ -44,9 +49,13 @@ export class CreatePatientTable1746500000003
     `);
   }
 
-  public async down(queryRunner: QueryRunner): Promise<void> {
+  public async down(
+    queryRunner: QueryRunner
+  ): Promise<void> {
+
     await queryRunner.query(`
-      DROP INDEX idx_patients_gender ON patients;
+      DROP INDEX idx_patients_gender
+      ON patients;
     `);
 
     await queryRunner.query(`
