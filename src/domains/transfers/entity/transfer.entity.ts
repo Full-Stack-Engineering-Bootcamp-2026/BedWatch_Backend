@@ -14,7 +14,7 @@ export enum TransferStatus {
   PENDING = "PENDING",
   APPROVED = "APPROVED",
   REJECTED = "REJECTED",
-  COMPLETED = "COMPLETED"
+  COMPLETED = "COMPLETED",
 }
 
 @Entity("transfers")
@@ -33,8 +33,8 @@ export class Transfer {
 })
 to_bed!: Bed | null;
 
-  @ManyToOne(() => User)
-  requested_by!: User;
+  @ManyToOne(() => User, { nullable: true })
+  requested_by!: User | null;
 
   @ManyToOne(() => User, { nullable: true })
   approved_by!: User | null;
