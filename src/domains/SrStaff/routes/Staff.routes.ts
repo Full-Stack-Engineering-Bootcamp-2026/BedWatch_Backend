@@ -37,5 +37,7 @@ export class SeniorStaffRoutes {
       authMiddleware.use,
       controller.getDashboardTrends,
     );
+
+    this.router.get("/profile", authMiddleware.use, controller.getProfile);
   }
 }

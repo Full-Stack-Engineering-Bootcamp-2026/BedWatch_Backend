@@ -59,4 +59,24 @@ export class SeniorStaffController {
         .json(failure(error.message || "Failed to fetch dashboard trends"));
     }
   };
+
+  public getProfile = async (req: Request, res: Response) => {
+    try {
+      const userId = Number(req.user?.id);
+
+      const profile = await this.seniorStaffService.getProfile(userId);
+
+      return res
+        .status(200)
+        .json(success(profile, "Senior staff profile fetched successfully"));
+    } catch (error: any) {
+      return res
+        .status(400)
+        .json(failure(error.message || "Failed to fetch profile"));
+    }
+  };
+
+  
+
+
 }
