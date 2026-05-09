@@ -1,9 +1,19 @@
 export interface CreateTransferDto {
+  "patientId": number;
+
+  "currentBedId": number;
+
+  "currentWardId": number;
+
+  "destinationWardId": number;
+}
+
+
+
+export interface CreateTransferDto {
   patientId: number;
 
-  currentBedId: number;
+  fromBedNumber: string;
 
-  currentWardId: number;
-
-  destinationWardId: number;
+  toBedNumber: string;
 }
