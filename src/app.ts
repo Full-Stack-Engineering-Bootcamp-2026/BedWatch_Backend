@@ -17,6 +17,9 @@ import { SeniorStaffRoutes } from "./domains/SrStaff/routes/Staff.routes";
 import { UserAdminRoutes } from "./domains/user/routes/user.admin.routes";
 import { WardAdminRoutes } from "./domains/ward/routes/ward.admin.routes";
 import { ForgotPasswordRoutes } from "./domains/forgot-password/routes/forgotPassword.routes";
+import { StaffRoutes } from "./domains/user/routes/user.staff.routes";
+import { BedRoutes } from "./domains/bed/route/bed.route";
+import { StaffTransferRoutes } from "./domains/transfers/routes/staff-patient.transfer.route";
 
 dotenv.config();
 
@@ -81,6 +84,9 @@ class Application {
     const userAdminRoutes = Container.get(UserAdminRoutes);
     const wardAdminRoutes = Container.get(WardAdminRoutes);
     const forgotPasswordRoutes = Container.get(ForgotPasswordRoutes);
+    const staffRoutes = Container.get(StaffRoutes);
+    const bedRoutes = Container.get(BedRoutes);
+    const staffTrasferRoutes = Container.get(StaffTransferRoutes)
 
     v1Router.use("/wards", wardRoutes.router);
     v1Router.use("/auth", authRoutes.router);
@@ -91,6 +97,10 @@ class Application {
     v1Router.use("/usersAdmin", userAdminRoutes.router);
     v1Router.use("/wardsAdmin", wardAdminRoutes.router);
     v1Router.use("/authF", forgotPasswordRoutes.router);
+    v1Router.use("/staff-dashboard", staffRoutes.router);
+
+    v1Router.use("/staff/transfers", staffTrasferRoutes.router);
+    v1Router.use("/beds", bedRoutes.router);
     this.app.use("/api/v1", v1Router);
   }
 

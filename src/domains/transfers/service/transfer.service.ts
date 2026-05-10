@@ -73,7 +73,8 @@ export class TransferService {
     if (admission.bed.id === toBed.id) {
       throw new Error("Patient is already assigned to this bed");
     }
-
+    console.log("TO BED STATUS:", toBed.status);
+    console.log("ENUM STATUS:", BedStatus.AVAILABLE);
     if (toBed.status !== BedStatus.AVAILABLE) {
       throw new Error("Destination bed is not available");
     }
@@ -169,20 +170,13 @@ export class TransferService {
         throw new Error("Transfer already processed");
       }
 
-    if (!transfer.to_bed) {
-  throw new Error(
-    "Destination bed not assigned",
-  );
-}
+      if (!transfer.to_bed) {
+        throw new Error("Destination bed not assigned");
+      }
 
-if (
-  transfer.to_bed.status !==
-  BedStatus.AVAILABLE
-) {
-  throw new Error(
-    "Destination bed is not available",
-  );
-}
+      if (transfer.to_bed.status !== BedStatus.AVAILABLE) {
+        throw new Error("Destination bed is not available");
+      }
       const admission = await admissionRepo.findOne({
         where: {
           patient: { id: transfer.patient.id },
@@ -256,67 +250,62 @@ if (
   }
 
   public async getAllTransfers() {
-  return await this.transferRepo.find({
-    relations: [
-      "patient",
-      "from_bed",
-      "from_bed.ward",
-      "to_bed",
-      "to_bed.ward",
-      "requested_by",
-      "approved_by",
-    ],
-    order: {
-      requested_at: "DESC",
-    },
-  });
+    return await this.transferRepo.find({
+      relations: [
+        "patient",
+        "from_bed",
+        "from_bed.ward",
+        "to_bed",
+        "to_bed.ward",
+        "requested_by",
+        "approved_by",
+      ],
+      order: {
+        requested_at: "DESC",
+      },
+    });
+  }
 
-  
-}
+  public async getCompletedTransfers() {
+    return await this.transferRepo.find({
+      where: {
+        status: TransferStatus.COMPLETED,
+      },
 
-public async getCompletedTransfers() {
-  return await this.transferRepo.find({
-    where: {
-      status: TransferStatus.COMPLETED,
-    },
+      relations: [
+        "from_bed",
+        "from_bed.ward",
+        "to_bed",
+        "to_bed.ward",
+        "requested_by",
+        "approved_by",
+      ],
 
-    relations: [
-      "from_bed",
-      "from_bed.ward",
-      "to_bed",
-      "to_bed.ward",
-      "requested_by",
-      "approved_by",
-    ],
+      order: {
+        requested_at: "DESC",
+      },
+    });
+  }
 
-    order: {
-      requested_at: "DESC",
-    },
-  });
-}
+  public async getRejectedTransfers() {
+    return await this.transferRepo.find({
+      where: {
+        status: TransferStatus.REJECTED,
+      },
 
-public async getRejectedTransfers() {
-  return await this.transferRepo.find({
-    where: {
-      status: TransferStatus.REJECTED,
-    },
+      relations: [
+        "patient",
+        "from_bed",
+        "from_bed.ward",
+        "to_bed",
+        "to_bed.ward",
+        "requested_by",
+        "approved_by",
+      ],
 
-    relations: [
-      "patient",
-      "from_bed",
-      "from_bed.ward",
-      "to_bed",
-      "to_bed.ward",
-      "requested_by",
-      "approved_by",
-    ],
-
-    order: {
-      requested_at: "DESC",
-
-    },
-  });
-}
-
-
+      order: {
+        requested_at: "DESC",
+      },
+    });
+  }
 }
