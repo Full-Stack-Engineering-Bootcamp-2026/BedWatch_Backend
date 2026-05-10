@@ -269,7 +269,7 @@ export class TransferService {
   public async getCompletedTransfers() {
     return await this.transferRepo.find({
       where: {
-        status: TransferStatus.COMPLETED,
+        status: TransferStatus.APPROVED,
       },
 
       relations: [
