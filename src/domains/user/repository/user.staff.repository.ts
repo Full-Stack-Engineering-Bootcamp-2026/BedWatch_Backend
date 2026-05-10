@@ -2,79 +2,156 @@ import AppDataSource from "../../../db/data-source";
 
 import { User } from "../../user/entity/user.entity";
 
-import { Bed } from "../../bed/entity/bed.entity";
+import {
+  Bed,
+  BedStatus,
+} from "../../bed/entity/bed.entity";
 
-export const getStaffDashboardRepository = async (userId: number) => {
-  const userRepo = AppDataSource.getRepository(User);
+import { AdmissionStatus } from "../../admission/entity/admission.entity";
 
-  const bedRepo = AppDataSource.getRepository(Bed);
+export const getStaffDashboardRepository =
+  async (userId: number) => {
 
-  const user = await userRepo.findOne({
-    where: {
-      id: userId,
-    },
+    const userRepo =
+      AppDataSource.getRepository(
+        User,
+      );
 
-    relations: ["ward"],
-  });
+    const bedRepo =
+      AppDataSource.getRepository(
+        Bed,
+      );
 
-  if (!user || !user.ward) {
-    throw new Error("Ward not assigned");
-  }
+    const user =
+      await userRepo.findOne({
+        where: {
+          id: userId,
+        },
 
-  const beds = await bedRepo.find({
-    where: {
-      ward: {
-        id: user.ward.id,
-      },
-    },
+        relations: ["ward"],
+      });
 
-    relations: {
-      admissions: {
-        patient: true,
-      },
-    },
+    if (!user || !user.ward) {
+      throw new Error(
+        "Ward not assigned",
+      );
+    }
 
-    order: {
-      bed_number: "ASC",
-    },
-  });
+    const beds =
+      await bedRepo.find({
+        where: {
+          ward: {
+            id:
+              user.ward.id,
+          },
+        },
 
-  const formattedBeds = beds.map((bed: any) => {
-    const latestAdmission = bed.admissions?.[0];
+        relations: {
+          admissions: {
+            patient: true,
+          },
+        },
+
+        order: {
+          bed_number: "ASC",
+        },
+      });
+
+    // AUTO CLEANING LOGIC
+    for (const bed of beds) {
+      if (
+        bed.status ===
+        BedStatus.CLEANING
+      ) {
+        const updatedAt =
+          new Date(
+            bed.updated_at,
+          ).getTime();
+
+        const now =
+          Date.now();
+
+        const diff =
+          now - updatedAt;
+
+        // 30 seconds
+        if (diff >= 30000) {
+          bed.status =
+            BedStatus.AVAILABLE;
+
+          await bedRepo.save(
+            bed,
+          );
+
+          console.log(
+            `Bed ${bed.bed_number} auto changed to AVAILABLE`,
+          );
+        }
+      }
+    }
+
+    const formattedBeds =
+      beds.map((bed: any) => {
+
+        const activeAdmission =
+          bed.admissions?.find(
+            (admission: any) =>
+              admission.status ===
+              AdmissionStatus.ACTIVE,
+          );
+
+        return {
+          id: bed.id,
+
+          bed_number:
+            bed.bed_number,
+
+          status:
+            bed.status,
+
+          patient:
+            activeAdmission
+              ? {
+                  id:
+                    activeAdmission
+                      .patient.id,
+
+                  name:
+                    activeAdmission
+                      .patient.name,
+
+                  age:
+                    activeAdmission
+                      .patient.age,
+
+                  diagnosis:
+                    activeAdmission
+                      .patient.reason,
+
+                  admittedAt:
+                    activeAdmission?.admitted_at
+                      ? new Date(
+                          activeAdmission.admitted_at,
+                        ).toLocaleString()
+                      : "N/A",
+                }
+              : null,
+
+          doctor:
+            "Not Assigned",
+
+          duration:
+            "4 Days",
+
+          priority:
+            "Medium",
+        };
+      });
 
     return {
-      id: bed.id,
+      ward: user.ward,
 
-      bed_number: bed.bed_number,
-
-      status: bed.status,
-
-      patient: latestAdmission
-        ? {
-            id: latestAdmission.patient.id,
-
-            name: latestAdmission.patient.name,
-
-            age: latestAdmission.patient.age,
-
-            diagnosis: latestAdmission.patient.reason,
-
-            admittedAt: latestAdmission?.admitted_at
-              ? new Date(latestAdmission.admitted_at).toLocaleString()
-              : "N/A",
-          }
-        : null,
-
-      doctor: "Not Assigned",
-
-      duration: "4 Days",
-
-      priority: "Medium",
+      beds:
+        formattedBeds,
     };
-  });
-
-  return {
-    ward: user.ward,
-    beds: formattedBeds,
   };
-};

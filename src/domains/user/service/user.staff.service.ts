@@ -19,9 +19,10 @@ import {
   getStaffDashboardRepository,
 } from "../repository/user.staff.repository";
 
+import {
+  AdmissionStatus,
+} from "../../admission/entity/admission.entity";
 
-
-import { AdmissionStatus } from "../../admission/entity/admission.entity";
 const patientRepository =
   AppDataSource.getRepository(Patient);
 
@@ -33,7 +34,6 @@ const bedRepository =
 
 const userRepository =
   AppDataSource.getRepository(User);
-
 export const getStaffDashboardService =
   async (userId: number) => {
 
