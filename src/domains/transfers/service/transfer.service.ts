@@ -583,8 +583,7 @@ export class TransferService {
   public async getCompletedTransfers() {
     return await this.transferRepo.find({
       where: {
-        status:
-          TransferStatus.APPROVED,
+        status: TransferStatus.APPROVED,
       },
 
       relations: [
