@@ -1,3 +1,5 @@
+import { Service } from "typedi";
+
 import { Router } from "express";
 
 import Container from "typedi";
@@ -14,70 +16,72 @@ import {
   getStaffDashboardController,
   getAdmissionMetaController,
   createAdmissionController,
+  dischargePatientController,
 } from "../controller/user.staff.controller";
 
-import { dischargePatientController } from "../controller/user.staff.controller";
+@Service()
+export class StaffRoutes {
+  public router: Router;
 
-const router = Router();
+  private authenticationMiddleware =
+    Container.get(AuthenticationMiddleware);
 
-const authenticationMiddleware =
-  Container.get(
-    AuthenticationMiddleware
-  );
+  private authorizationMiddleware =
+    Container.get(AuthorizationMiddleware);
 
-const authorizationMiddleware =
-  Container.get(
-    AuthorizationMiddleware
-  );
+  constructor() {
+    this.router = Router();
 
-router.get(
-  "/dashboard",
+    this.initializeRoutes();
+  }
 
-  authenticationMiddleware.use,
+  private initializeRoutes(): void {
+    this.router.get(
+      "/dashboard",
 
-  authorizationMiddleware.allowRoles(
-    "STAFF"
-  ),
+      this.authenticationMiddleware.use,
 
-  getStaffDashboardController
-);
+      this.authorizationMiddleware.allowRoles(
+        "STAFF"
+      ),
 
-router.get(
-  "/admission-meta",
+      getStaffDashboardController
+    );
 
-  authenticationMiddleware.use,
+    this.router.get(
+      "/admission-meta",
 
-  authorizationMiddleware.allowRoles(
-    "STAFF"
-  ),
+      this.authenticationMiddleware.use,
 
-  getAdmissionMetaController
-);
+      this.authorizationMiddleware.allowRoles(
+        "STAFF"
+      ),
 
-router.post(
-  "/admissions",
+      getAdmissionMetaController
+    );
 
-  authenticationMiddleware.use,
+    this.router.post(
+      "/admissions",
 
-  authorizationMiddleware.allowRoles(
-    "STAFF"
-  ),
+      this.authenticationMiddleware.use,
 
-  createAdmissionController
-);
+      this.authorizationMiddleware.allowRoles(
+        "STAFF"
+      ),
 
-router.patch(
-  "/beds/:id/discharge",
+      createAdmissionController
+    );
 
-  authenticationMiddleware.use,
+    this.router.patch(
+      "/beds/:id/discharge",
 
-  authorizationMiddleware.allowRoles(
-    "STAFF"
-  ),
+      this.authenticationMiddleware.use,
 
-  dischargePatientController
-);
+      this.authorizationMiddleware.allowRoles(
+        "STAFF"
+      ),
 
-
-
-export default router;
+      dischargePatientController
+    );
+  }
+}

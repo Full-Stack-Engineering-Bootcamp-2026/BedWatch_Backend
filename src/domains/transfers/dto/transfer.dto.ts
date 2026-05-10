@@ -1,12 +1,12 @@
-export interface CreateTransferDto {
-  "patientId": number;
+// export interface CreateTransferDto {
+//   "patientId": number;
 
-  "currentBedId": number;
+//   "currentBedId": number;
 
-  "currentWardId": number;
+//   "currentWardId": number;
 
-  "destinationWardId": number;
-}
+//   "destinationWardId": number;
+// }
 
 
 
