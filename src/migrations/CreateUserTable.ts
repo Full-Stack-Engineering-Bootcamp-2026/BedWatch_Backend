@@ -37,8 +37,6 @@ export class CreateUserTable1746500000001
 
         ward_id INT NULL,
 
-        profile_image_key VARCHAR(500) NULL,
-
         created_at TIMESTAMP NOT NULL
           DEFAULT CURRENT_TIMESTAMP,
 
@@ -67,6 +65,7 @@ export class CreateUserTable1746500000001
   public async down(
     queryRunner: QueryRunner,
   ): Promise<void> {
+
     await queryRunner.query(`
       DROP INDEX idx_users_role ON users;
     `);

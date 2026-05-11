@@ -31,4 +31,4 @@ export class BedRoutes {
       controller.getAvailableBedsByWard,
     );
   }
-}
+} 

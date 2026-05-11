@@ -53,14 +53,14 @@ export class User {
   ward!: Ward | null;
 
   
-// added for b2bucket
-  @Column({
-  type: "varchar",
-  name: "profile_image_key",
-  length: 500,
-  nullable: true,
-})
-profileImageKey!: string | null;
+// // added for b2bucket
+//   @Column({
+//   type: "varchar",
+//   name: "profile_image_key",
+//   length: 500,
+//   nullable: true,
+// })
+// profileImageKey!: string | null;
  
 
   @CreateDateColumn()

@@ -5,7 +5,7 @@ import {
 
 import {
   getStaffDashboardService,
-  getAdmissionMetaService,
+  getAdmissionService,
   createAdmissionService,
 } from "../service/user.staff.service";
 
@@ -41,7 +41,7 @@ export const getStaffDashboardController =
     }
   };
 
-export const getAdmissionMetaController =
+export const getAdmissionController =
   async (
     req: Request,
     res: Response
@@ -52,9 +52,9 @@ export const getAdmissionMetaController =
         req.user!.id;
 
       const data =
-        await getAdmissionMetaService(
+        await getAdmissionService(
           userId
-        );
+        ); 
 
       return res.status(200).json({
         success: true,

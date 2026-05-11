@@ -34,6 +34,7 @@ const bedRepository =
 
 const userRepository =
   AppDataSource.getRepository(User);
+
 export const getStaffDashboardService =
   async (userId: number) => {
 
@@ -42,7 +43,8 @@ export const getStaffDashboardService =
     );
   };
 
-export const getAdmissionMetaService =
+  
+export const getAdmissionService =
   async (userId: number) => {
 
     const user =
