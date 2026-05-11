@@ -5,6 +5,7 @@ import {
   ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
+  JoinColumn,
 } from "typeorm";
 
 import { Ward } from "../../ward/entity/ward.entity";
@@ -20,20 +21,47 @@ export class User {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column({ length: 100 })
+  @Column({
+    length: 100,
+  })
   name!: string;
 
-  @Column({ unique: true })
+  @Column({
+    unique: true,
+  })
   email!: string;
 
   @Column()
   password!: string;
 
-  @Column({ type: "enum", enum: UserRole })
+  @Column({
+    type: "enum",
+    enum: UserRole,
+  })
   role!: UserRole;
 
-  @ManyToOne(() => Ward, (ward) => ward.users, { nullable: true })
+  @ManyToOne(
+    () => Ward,
+    (ward) => ward.users,
+    {
+      nullable: true,
+    },
+  )
+  @JoinColumn({
+    name: "ward_id",
+  })
   ward!: Ward | null;
+
+  
+// // added for b2bucket
+//   @Column({
+//   type: "varchar",
+//   name: "profile_image_key",
+//   length: 500,
+//   nullable: true,
+// })
+// profileImageKey!: string | null;
+ 
 
   @CreateDateColumn()
   created_at!: Date;

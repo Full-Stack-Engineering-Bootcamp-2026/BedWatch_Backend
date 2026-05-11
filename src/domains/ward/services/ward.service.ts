@@ -1,5 +1,5 @@
 import { Service } from "typedi";
-import { AppDataSource } from "../../../db/db";
+import  AppDataSource  from "../../../db/data-source";
 import { Ward } from "../entity/ward.entity";
 import { Bed } from "../../bed/entity/bed.entity";
 import { log } from "node:console";

@@ -1,4 +1,4 @@
-import { AppDataSource } from "../../../db/db";
+import AppDataSource from "../../../db/data-source";
 import bcrypt from "bcrypt";
 import { User, UserRole } from "../entity/user.entity";
 
@@ -56,5 +56,35 @@ export class UserService {
     await this.userRepository.save(user);
 
     return user;
+  };
+
+  public getLoggedInUser = async (userId: number) => {
+    const user = await this.userRepository.findOne({
+      where: {
+        id: userId,
+      },
+      relations: ["ward"],
+    });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      ward: user.ward
+        ? {
+            id: user.ward.id,
+            name: user.ward.name,
+            type: user.ward.type,
+            capacity: user.ward.capacity,
+          }
+        : null,
+      created_at: user.created_at,
+      updated_at: user.updated_at,
+    };
   };
 }

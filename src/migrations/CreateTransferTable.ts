@@ -29,14 +29,15 @@ export class CreateTransferTable1746500000004
 
         to_bed_id INT NOT NULL,
 
-        requested_by_id INT NOT NULL,
+        requested_by_id INT NULL,
 
         approved_by_id INT NULL,
 
         status ENUM(
           'PENDING',
           'APPROVED',
-          'REJECTED'
+          'REJECTED',
+          'COMPLETED'
         ) NOT NULL DEFAULT 'PENDING',
 
         requested_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -61,7 +62,7 @@ export class CreateTransferTable1746500000004
         CONSTRAINT fk_transfers_requested_by
           FOREIGN KEY (requested_by_id)
           REFERENCES users(id)
-          ON DELETE CASCADE,
+          ON DELETE SET NULL,
 
         CONSTRAINT fk_transfers_approved_by
           FOREIGN KEY (approved_by_id)

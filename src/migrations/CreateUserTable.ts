@@ -16,7 +16,9 @@ import { MigrationInterface, QueryRunner } from "typeorm";
 export class CreateUserTable1746500000001
   implements MigrationInterface
 {
-  public async up(queryRunner: QueryRunner): Promise<void> {
+  public async up(
+    queryRunner: QueryRunner,
+  ): Promise<void> {
     await queryRunner.query(`
       CREATE TABLE users (
         id INT PRIMARY KEY AUTO_INCREMENT,
@@ -35,9 +37,11 @@ export class CreateUserTable1746500000001
 
         ward_id INT NULL,
 
-        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        created_at TIMESTAMP NOT NULL
+          DEFAULT CURRENT_TIMESTAMP,
 
-        updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+        updated_at TIMESTAMP NOT NULL
+          DEFAULT CURRENT_TIMESTAMP
           ON UPDATE CURRENT_TIMESTAMP,
 
         CONSTRAINT fk_users_ward
@@ -58,7 +62,10 @@ export class CreateUserTable1746500000001
     `);
   }
 
-  public async down(queryRunner: QueryRunner): Promise<void> {
+  public async down(
+    queryRunner: QueryRunner,
+  ): Promise<void> {
+
     await queryRunner.query(`
       DROP INDEX idx_users_role ON users;
     `);

@@ -29,11 +29,13 @@ export class Patient {
   gender!: Gender;
 
   @Column()
-  Reason! : string;
-
+  reason!: string;
 
   @Column()
-  Notes! : string
+  notes!: string;
+
+  @Column()
+  admittingDoctor!: string;
 
   @CreateDateColumn()
   created_at!: Date;

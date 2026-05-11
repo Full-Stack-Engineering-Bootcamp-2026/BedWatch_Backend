@@ -1,5 +1,5 @@
 import { Service } from "typedi";
-import { AppDataSource } from "../../../db/db";
+import AppDataSource from "../../../db/data-source";
 import { User, UserRole } from "../../user/entity/user.entity";
 import bcrypt from "bcrypt";
 import jwt, { SignOptions } from "jsonwebtoken";
@@ -74,9 +74,14 @@ export class AuthService {
   }
 
   public async login(email: string, password: string) {
+    console.log("awbh");
+    
     const user = await this.userRepo.findOne({
       where: { email },
     });
+
+    console.log("user - ",user);
+    
 
     if (!user) {
       console.log("User not found");
