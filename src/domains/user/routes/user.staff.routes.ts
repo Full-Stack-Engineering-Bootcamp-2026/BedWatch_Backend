@@ -14,7 +14,7 @@ import {
 
 import {
   getStaffDashboardController,
-  getAdmissionMetaController,
+  getAdmissionController,
   createAdmissionController,
   dischargePatientController,
 } from "../controller/user.staff.controller";
@@ -57,7 +57,7 @@ export class StaffRoutes {
         "STAFF"
       ),
 
-      getAdmissionMetaController
+      getAdmissionController
     );
 
     this.router.post(

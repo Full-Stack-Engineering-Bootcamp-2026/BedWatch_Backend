@@ -74,7 +74,7 @@ export const getStaffDashboardRepository =
         const diff =
           now - updatedAt;
 
-        // 30 seconds
+    
         if (diff >= 30000) {
           bed.status =
             BedStatus.AVAILABLE;
