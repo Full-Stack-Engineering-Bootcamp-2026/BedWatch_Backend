@@ -1,33 +1,17 @@
-import { Service } from "typedi";
-
-import { Router } from "express";
-
-import Container from "typedi";
-
-import {
-  AuthorizationMiddleware,
-} from "../../auth/middleware/authorization.middleware";
-
-import {
-  AuthenticationMiddleware,
-} from "../../auth/middleware/authenticate.middleware";
-
-import {
-  getStaffDashboardController,
-  getAdmissionController,
-  createAdmissionController,
-  dischargePatientController,
-} from "../controller/user.staff.controller";
+import { Service } from "typedi"
+import { Router } from "express"
+import Container from "typedi"
+import { AuthorizationMiddleware } from "../../auth/middleware/authorization.middleware";
+import { AuthenticationMiddleware} from "../../auth/middleware/authenticate.middleware";
+import { getStaffDashboardController, getAdmissionController,createAdmissionController,dischargePatientController} from "../controller/user.staff.controller";
 
 @Service()
 export class StaffRoutes {
   public router: Router;
 
-  private authenticationMiddleware =
-    Container.get(AuthenticationMiddleware);
+  private authenticationMiddleware = Container.get(AuthenticationMiddleware);
 
-  private authorizationMiddleware =
-    Container.get(AuthorizationMiddleware);
+  private authorizationMiddleware = Container.get(AuthorizationMiddleware);
 
   constructor() {
     this.router = Router();
