@@ -1,14 +1,5 @@
-import {
-  Request,
-  Response,
-} from "express";
-
-import {
-  getStaffDashboardService,
-  getAdmissionService,
-  createAdmissionService,
-} from "../service/user.staff.service";
-
+import { Request,Response} from "express";
+import { getStaffDashboardService,getAdmissionService,createAdmissionService} from "../service/user.staff.service";
 import { dischargePatientService } from "../service/user.staff.service";
 
 export const getStaffDashboardController =

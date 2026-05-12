@@ -1,23 +1,10 @@
 import { Service } from "typedi";
-
 import AppDataSource from "../../../db/data-source";
-
-import {
-  Transfer,
-  TransferStatus,
-} from "../entity/transfer.entity";
-
+import {Transfer,TransferStatus} from "../entity/transfer.entity";
 import { Patient } from "../../patient/entity/patient.entity";
-
 import { Bed } from "../../bed/entity/bed.entity";
-
 import { User } from "../../user/entity/user.entity";
-
-import {
-  Admission,
-  AdmissionStatus,
-} from "../../admission/entity/admission.entity";
-
+import {Admission,AdmissionStatus} from "../../admission/entity/admission.entity";
 import { CreateTransferDto } from "../dto/transfer.dto";
 
 @Service()
