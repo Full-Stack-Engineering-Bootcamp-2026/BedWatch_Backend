@@ -1,17 +1,7 @@
-import {
-  Request,
-  Response,
-} from "express";
-
+import {Request,Response} from "express";
 import { Service } from "typedi";
-
-import {
-  success,
-  failure,
-} from "../../../Http_Response/response";
-
+import {success,failure} from "../../../Http_Response/response";
 import { CreateTransferDto } from "../dto/transfer.dto";
-
 import { StaffTransferService } from "../service/patient.transfer.service";
 
 @Service()

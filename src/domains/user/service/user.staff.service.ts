@@ -1,46 +1,27 @@
 import AppDataSource from "../../../db/data-source";
+import { Patient } from "../../patient/entity/patient.entity";
+import { Admission} from "../../admission/entity/admission.entity";
+import {Bed,BedStatus} from "../../bed/entity/bed.entity";
+import { User } from "../../user/entity/user.entity";
+import { StaffDashboardRepository } from "../repository/user.staff.repository";
+import { AdmissionStatus, } from "../../admission/entity/admission.entity";
 
-import { Patient }
-  from "../../patient/entity/patient.entity";
+const patientRepository = AppDataSource.getRepository(Patient);
 
-import {
-  Admission,
-} from "../../admission/entity/admission.entity";
+const admissionRepository = AppDataSource.getRepository(Admission);
 
-import {
-  Bed,
-  BedStatus,
-} from "../../bed/entity/bed.entity";
+const bedRepository = AppDataSource.getRepository(Bed);
 
-import { User }
-  from "../../user/entity/user.entity";
+const userRepository = AppDataSource.getRepository(User);
 
-import {
-  getStaffDashboardRepository,
-} from "../repository/user.staff.repository";
+export const getStaffDashboardService = async (userId: number) => {
 
-import {
-  AdmissionStatus,
-} from "../../admission/entity/admission.entity";
+const staffDashboardRepository = new StaffDashboardRepository();
 
-const patientRepository =
-  AppDataSource.getRepository(Patient);
-
-const admissionRepository =
-  AppDataSource.getRepository(Admission);
-
-const bedRepository =
-  AppDataSource.getRepository(Bed);
-
-const userRepository =
-  AppDataSource.getRepository(User);
-
-export const getStaffDashboardService =
-  async (userId: number) => {
-
-    return await getStaffDashboardRepository(
-      userId
-    );
+return await
+  staffDashboardRepository.getStaffDashboard(
+    userId
+  );
   };
 
   

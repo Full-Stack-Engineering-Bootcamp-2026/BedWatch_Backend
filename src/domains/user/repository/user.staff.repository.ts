@@ -1,16 +1,15 @@
+import { Service } from "typedi";
 import AppDataSource from "../../../db/data-source";
-
 import { User } from "../../user/entity/user.entity";
+import {Bed,BedStatus} from "../../bed/entity/bed.entity";
+import {AdmissionStatus} from "../../admission/entity/admission.entity";
 
-import {
-  Bed,
-  BedStatus,
-} from "../../bed/entity/bed.entity";
+@Service()
+export class StaffDashboardRepository {
 
-import { AdmissionStatus } from "../../admission/entity/admission.entity";
-
-export const getStaffDashboardRepository =
-  async (userId: number) => {
+  async getStaffDashboard(
+    userId: number,
+  ) {
 
     const userRepo =
       AppDataSource.getRepository(
@@ -57,12 +56,13 @@ export const getStaffDashboardRepository =
         },
       });
 
-    // AUTO CLEANING LOGIC
     for (const bed of beds) {
+
       if (
         bed.status ===
         BedStatus.CLEANING
       ) {
+
         const updatedAt =
           new Date(
             bed.updated_at,
@@ -74,8 +74,8 @@ export const getStaffDashboardRepository =
         const diff =
           now - updatedAt;
 
-    
         if (diff >= 30000) {
+
           bed.status =
             BedStatus.AVAILABLE;
 
@@ -101,6 +101,7 @@ export const getStaffDashboardRepository =
           );
 
         return {
+
           id: bed.id,
 
           bed_number:
@@ -149,9 +150,12 @@ export const getStaffDashboardRepository =
       });
 
     return {
-      ward: user.ward,
+
+      ward:
+        user.ward,
 
       beds:
         formattedBeds,
     };
-  };
+  }
+}
