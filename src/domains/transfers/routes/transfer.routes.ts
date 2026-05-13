@@ -16,7 +16,6 @@ export class TransferRoutes {
     const controller = Container.get(TransferController);
 
     const authMiddleware = Container.get(AuthenticationMiddleware);
-
     this.router.post("/", authMiddleware.use, controller.createTransferRequest);
 
     this.router.get(
@@ -36,6 +35,8 @@ export class TransferRoutes {
       authMiddleware.use,
       controller.rejectTransfer,
     );
+
+    this.router.get("/table", authMiddleware.use, controller.getTransfersTable);
 
     this.router.get("/all", authMiddleware.use, controller.getAllTransfers);
 
