@@ -4,9 +4,12 @@ import { User, UserRole } from "../entity/user.entity";
 
 import { Ward } from "../../ward/entity/ward.entity";
 import { Service } from "typedi";
+import { StorageService } from "../../../common/storage/storageService";
+import { uploadProfileImageRepository } from "../repository/user.repository";
 
 @Service()
 export class UserService {
+  constructor(private readonly storageService: StorageService) {}
   private userRepository = AppDataSource.getRepository(User);
   public async hashPassword(password: string): Promise<string> {
     return bcrypt.hash(password, 10);
@@ -85,6 +88,22 @@ export class UserService {
         : null,
       created_at: user.created_at,
       updated_at: user.updated_at,
+      imageUrl: user.imageUrl,  
     };
   };
+
+  public async uploadProfileImage(userId: number, file: Express.Multer.File) {
+    const fileName = `profile/${Date.now()}-${file.originalname}`;
+
+    await this.storageService.uploadFile(file, fileName);
+
+    const imageUrl = await this.storageService.getSignedFileUrl(fileName);
+
+    const updatedUser = await uploadProfileImageRepository(userId, imageUrl);
+
+    return {
+      imageUrl,
+      user: updatedUser,
+    };
+  }
 }
