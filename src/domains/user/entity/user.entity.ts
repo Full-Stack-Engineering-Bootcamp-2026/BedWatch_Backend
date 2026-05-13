@@ -40,28 +40,24 @@ export class User {
   })
   role!: UserRole;
 
-  @ManyToOne(
-    () => Ward,
-    (ward) => ward.users,
-    {
-      nullable: true,
-    },
-  )
+  @ManyToOne(() => Ward, (ward) => ward.users, {
+    nullable: true,
+  })
   @JoinColumn({
     name: "ward_id",
   })
   ward!: Ward | null;
 
-  
-// // added for b2bucket
-//   @Column({
-//   type: "varchar",
-//   name: "profile_image_key",
-//   length: 500,
-//   nullable: true,
-// })
-// profileImageKey!: string | null;
- 
+  // // added for b2bucket
+  //   @Column({
+  //   type: "varchar",
+  //   name: "profile_image_key",
+  //   length: 500,
+  //   nullable: true,
+  // })
+  // profileImageKey!: string | null;
+  @Column({ length: 10000, nullable: true })
+  imageUrl!: string;
 
   @CreateDateColumn()
   created_at!: Date;

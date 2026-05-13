@@ -75,62 +75,30 @@ class Application {
 
     const authMiddleware = Container.get(AuthenticationMiddleware);
 
-    v1Router.get(
-      "/posts",
-      authMiddleware.use,
-      (req: Request, res: Response) => {
-        res.json(
-          success({
-            user: req.user,
-          }),
-        );
-      },
-    );
+   
 
     const wardRoutes = Container.get(WardRoutes);
-
     const authRoutes = Container.get(AuthRoutes);
-
     const userRoutes = Container.get(UserRoutes);
-
     const transferRoute = Container.get(TransferRoutes);
-``
     const srStaffRoute = Container.get(SeniorStaffRoutes);
-
     const userAdminRoutes = Container.get(UserAdminRoutes);
-
     const wardAdminRoutes = Container.get(WardAdminRoutes);
-
     const forgotPasswordRoutes = Container.get(ForgotPasswordRoutes);
-
     const staffRoutes = Container.get(StaffRoutes);
-
     const bedRoutes = Container.get(BedRoutes);
-
     const staffTrasferRoutes = Container.get(StaffTransferRoutes);
-
     v1Router.use("/wards", wardRoutes.router);
-
     v1Router.use("/auth", authRoutes.router);
-
     v1Router.use("/users", userRoutes.router);
-
     v1Router.use("/transfers", transferRoute.router);
-
     v1Router.use("/senior-staff", srStaffRoute.router);
-
     v1Router.use("/usersAdmin", userAdminRoutes.router);
-
     v1Router.use("/wardsAdmin", wardAdminRoutes.router);
-
     v1Router.use("/authF", forgotPasswordRoutes.router);
-
     v1Router.use("/staff-dashboard", staffRoutes.router);
-
     v1Router.use("/staff/transfers", staffTrasferRoutes.router);
-
     v1Router.use("/beds", bedRoutes.router);
-
     this.app.use("/api/v1", v1Router);
   }
 
