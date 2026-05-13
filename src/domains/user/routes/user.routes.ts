@@ -10,7 +10,6 @@ import { upload } from "../../../common/middlewares/upload.middleware";
 
 @Service()
 export class UserRoutes {
-
   public router: Router;
 
   constructor(
@@ -18,32 +17,24 @@ export class UserRoutes {
 
     private authMiddleware: AuthenticationMiddleware,
   ) {
-
     this.router = Router();
 
     this.initializeRoutes();
   }
 
   private initializeRoutes(): void {
+    this.router.post("/", this.userController.createUser);
 
-    this.router.post(
-      "/",
-      this.userController.createUser
-    );
-
-    this.router.get(
-      "/me",
-      this.authMiddleware.use,
-      this.userController.getMe
-    );
+    this.router.get("/me", this.authMiddleware.use, this.userController.getMe);
 
     // upload image
     this.router.post(
-  "/upload-profile",
+      "/upload-profile",
+      this.authMiddleware.use,
 
-  upload.single("image"),
+      upload.single("image"),
 
-  this.userController.uploadProfileImage
-);
+      this.userController.uploadProfileImage,
+    );
   }
 }

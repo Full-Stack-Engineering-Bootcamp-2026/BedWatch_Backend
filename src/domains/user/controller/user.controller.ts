@@ -13,10 +13,10 @@ export class UserController {
   // constructor(private userService: UserService) {}
 
   constructor(
-  private userService: UserService,
+    private userService: UserService,
 
-  private storageService: StorageService
-) {}
+    private storageService: StorageService,
+  ) {}
 
   public createUser = async (req: Request, res: Response) => {
     try {
@@ -56,58 +56,36 @@ export class UserController {
 
   //image upload service
 
-  public uploadProfileImage = async (
-  req: Request,
-  res: Response
-) => {
-  try {
+  public uploadProfileImage = async (req: Request, res: Response) => {
+    try {
+      const userId = Number(req.user?.id);
 
-    if (!req.file) {
+      if (!userId) {
+        return res.status(401).json(failure("Unauthorized user"));
+      }
+
+      if (!req.file) {
+        return res.status(400).json(failure("Image file is required"));
+      }
+      console.log("???????????????????????????????????", req.user);
+      const imageUrl = await this.userService.uploadProfileImage(
+        userId,
+        req.file,
+      );
+
+      return res
+        .status(200)
+        .json(success(imageUrl, "Profile image uploaded successfully"));
+    } catch (error: any) {
+      console.log("UPLOAD ERROR:", error);
+
+      console.log("UPLOAD ERROR MESSAGE:", error?.message);
+
+      console.log("UPLOAD ERROR STACK:", error?.stack);
+
       return res
         .status(400)
-        .json(
-          failure(
-            "Image file is required"
-          )
-        );
+        .json(failure(error?.message || "Failed to upload profile image"));
     }
-
-    const fileName =
-      `profile/${Date.now()}-${req.file.originalname}`;
-
-    await this.storageService.uploadFile(
-      req.file,
-      fileName
-    );
-
-    const imageUrl =
-      console.log(req.file);
-      await this.storageService.getSignedFileUrl(
-        fileName
-      );
-
-    return res
-      .status(200)
-      .json(
-        success(
-          {
-            fileName,
-            imageUrl,
-          },
-          "Profile image uploaded successfully"
-        )
-      );
-
-  } catch (error: any) {
-
-    return res
-      .status(400)
-      .json(
-        failure(
-          error.message ||
-          "Failed to upload profile image"
-        )
-      );
-  }
-};
+  };
 }
