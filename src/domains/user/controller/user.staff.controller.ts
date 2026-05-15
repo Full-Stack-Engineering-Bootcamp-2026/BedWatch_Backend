@@ -1,6 +1,9 @@
-import { Request,Response} from "express";
-import { getStaffDashboardService,getAdmissionService,createAdmissionService} from "../service/user.staff.service";
-import { dischargePatientService } from "../service/user.staff.service";
+import { Request, Response } from "express";
+
+import { StaffDashboardService } from "../service/user.staff.service";
+
+const staffDashboardService =
+  new StaffDashboardService();
 
 export const getStaffDashboardController =
   async (
@@ -13,7 +16,7 @@ export const getStaffDashboardController =
         req.user!.id;
 
       const data =
-        await getStaffDashboardService(
+        await staffDashboardService.getStaffDashboard(
           userId
         );
 
@@ -43,9 +46,9 @@ export const getAdmissionController =
         req.user!.id;
 
       const data =
-        await getAdmissionService(
+        await staffDashboardService.getAdmissions(
           userId
-        ); 
+        );
 
       return res.status(200).json({
         success: true,
@@ -73,7 +76,7 @@ export const createAdmissionController =
         req.user!.id;
 
       const result =
-        await createAdmissionService(
+        await staffDashboardService.createAdmission(
           req.body,
           userId
         );
@@ -95,22 +98,32 @@ export const createAdmissionController =
     }
   };
 
-  export const dischargePatientController =
+export const dischargePatientController =
   async (
     req: Request,
     res: Response
   ) => {
+    try {
 
-    const bedId =
-      Number(req.params.id);
+      const bedId =
+        Number(req.params.id);
 
-    const data =
-      await dischargePatientService(
-        bedId
-      );
+      const data =
+        await staffDashboardService.dischargePatient(
+          bedId
+        );
 
-    return res.status(200).json({
-      success: true,
-      data,
-    });
+      return res.status(200).json({
+        success: true,
+        data,
+      });
+
+    } catch (error: any) {
+
+      return res.status(400).json({
+        success: false,
+        message:
+          error.message,
+      });
+    }
   };
